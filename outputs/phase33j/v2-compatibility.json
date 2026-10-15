@@ -1,0 +1,382 @@
+{
+  "note": "director-plan-v2.json replayed through the compile contract; V2 and the plan file are NOT modified",
+  "v2Hash": "fb8c4175d2bdba32",
+  "pass1_asAuthoredIn33I": {
+    "compiles": false,
+    "refusal": "shot 'S4-room-withdraws' failed validation: motivation 'action-responsive' requires respondsTo — a camera that moves must name the event it responds to",
+    "context": {
+      "shot": "S4-room-withdraws",
+      "problems": [
+        "motivation 'action-responsive' requires respondsTo — a camera that moves must name the event it responds to"
+      ]
+    }
+  },
+  "pass2_withS4Correction": {
+    "compiles": true,
+    "shots": [
+      {
+        "shotId": "S1-establish",
+        "frameStart": 0,
+        "frameEnd": 95,
+        "semanticEvent": "a person stands alone in a room, and a name is written on the wall",
+        "dramaticIntention": "establish the world and the person-name relation before anything changes",
+        "expectedAudienceReading": "a person is alone in a room, and their name is written on the wall",
+        "primaryAttention": "the room and the person standing in it",
+        "target": {
+          "id": "the name on the wall",
+          "relations": []
+        },
+        "performance": {
+          "physical": "none",
+          "semantic": []
+        },
+        "compositionRelation": "presentational",
+        "expression": {
+          "kind": "none",
+          "semantic": "the name is already written and must simply be legible"
+        },
+        "camera": {
+          "move": "none",
+          "motivation": "static",
+          "reason": "the space must be understood before it can be lost"
+        },
+        "startWorldState": {
+          "personState": "step:weight-transfer",
+          "nameState": "intact",
+          "roomState": "complete",
+          "nameProgress": 0,
+          "roomProgress": 0
+        },
+        "endWorldState": {
+          "personState": "step:weight-transfer",
+          "nameState": "intact",
+          "roomState": "complete",
+          "nameProgress": 0,
+          "roomProgress": 0
+        },
+        "continuityRequirements": [],
+        "decisionRecord": {
+          "semanticEvent": "a person stands alone in a room, and a name is written on the wall",
+          "primaryPhysicalAction": "none",
+          "asciiExpression": "none",
+          "expressionReason": "the name is already written and must simply be legible",
+          "causalRelation": "presentational",
+          "causalTimingLandmark": "none",
+          "cameraMotivation": "static",
+          "cameraMove": "none",
+          "attentionHierarchy": [
+            "the room and the person standing in it",
+            "the name on the wall"
+          ],
+          "beginsIn": "empty frame",
+          "endsIn": "person standing, room complete, NAME intact",
+          "expectedAudienceReading": "a person is alone in a room, and their name is written on the wall"
+        }
+      },
+      {
+        "shotId": "S2-performance",
+        "frameStart": 96,
+        "frameEnd": 284,
+        "semanticEvent": "the person notices the name, orients to it, steps toward it, settles and reaches, and the name breaks",
+        "dramaticIntention": "the act of reaching for the name is what destroys it",
+        "expectedAudienceReading": "reaching for the name is what makes it break",
+        "primaryAttention": "the reaching arm",
+        "target": {
+          "id": "the name breaking apart",
+          "relations": [
+            "REACH_TOWARD(the name breaking apart)"
+          ]
+        },
+        "performance": {
+          "physical": "reach",
+          "semantic": [
+            "REACH_TOWARD(the name breaking apart)"
+          ]
+        },
+        "compositionRelation": "physical-causes-expression",
+        "expression": {
+          "kind": "letter-fragment",
+          "semantic": "the name breaks BECAUSE the person reached, which is the film causal centre"
+        },
+        "causalTiming": {
+          "cause": "REACH",
+          "effect": "LETTER_FRAGMENT",
+          "causeReadableFrame": 157,
+          "effectOnsetFrame": 189,
+          "holdRatio": 0.25,
+          "validationScope": "REACH -> LETTER_FRAGMENT only; no other pair has external evidence"
+        },
+        "camera": {
+          "move": "none",
+          "motivation": "static",
+          "reason": "the character now supplies the motion; a push here would compete with the performance (3.3I SHOT COMPOSITION CORRECTION)"
+        },
+        "startWorldState": {
+          "personState": "step:weight-transfer",
+          "nameState": "intact",
+          "roomState": "complete",
+          "nameProgress": 0,
+          "roomProgress": 0
+        },
+        "endWorldState": {
+          "personState": "step:settle",
+          "nameState": "gone",
+          "roomState": "complete",
+          "nameProgress": 1,
+          "roomProgress": 0
+        },
+        "continuityRequirements": [],
+        "decisionRecord": {
+          "semanticEvent": "the person notices the name, orients to it, steps toward it, settles and reaches, and the name breaks",
+          "primaryPhysicalAction": "reach",
+          "asciiExpression": "letter-fragment",
+          "expressionReason": "the name breaks BECAUSE the person reached, which is the film causal centre",
+          "causalRelation": "physical-causes-expression",
+          "causalTimingLandmark": "reach-readable",
+          "cameraMotivation": "static",
+          "cameraMove": "none",
+          "attentionHierarchy": [
+            "the reaching arm",
+            "the name breaking apart"
+          ],
+          "beginsIn": "person standing, NAME intact",
+          "endsIn": "arm extended, NAME fragmenting",
+          "expectedAudienceReading": "reaching for the name is what makes it break"
+        }
+      },
+      {
+        "shotId": "S3-name-lost",
+        "frameStart": 285,
+        "frameEnd": 350,
+        "semanticEvent": "the name comes apart and almost nothing remains",
+        "dramaticIntention": "the consequence, given room to land",
+        "expectedAudienceReading": "the name is gone and the person still holds the gesture that removed it",
+        "primaryAttention": "what is left of the name",
+        "target": {
+          "id": "target",
+          "relations": []
+        },
+        "performance": {
+          "physical": "none",
+          "semantic": []
+        },
+        "compositionRelation": "expression-only",
+        "expression": {
+          "kind": "letter-fragment",
+          "semantic": "the same fragmentation continuing to its end, not a second effect"
+        },
+        "camera": {
+          "move": "none",
+          "motivation": "static",
+          "reason": "the loss should be watched, not announced"
+        },
+        "startWorldState": {
+          "personState": "step:settle",
+          "nameState": "gone",
+          "roomState": "complete",
+          "nameProgress": 1,
+          "roomProgress": 0
+        },
+        "endWorldState": {
+          "personState": "step:settle",
+          "nameState": "gone",
+          "roomState": "complete",
+          "nameProgress": 1,
+          "roomProgress": 0
+        },
+        "continuityRequirements": [],
+        "decisionRecord": {
+          "semanticEvent": "the name comes apart and almost nothing remains",
+          "primaryPhysicalAction": "none",
+          "asciiExpression": "letter-fragment",
+          "expressionReason": "the same fragmentation continuing to its end, not a second effect",
+          "causalRelation": "expression-only",
+          "causalTimingLandmark": "none",
+          "cameraMotivation": "static",
+          "cameraMove": "none",
+          "attentionHierarchy": [
+            "what is left of the name"
+          ],
+          "beginsIn": "arm extended, NAME loosening",
+          "endsIn": "NAME almost gone",
+          "expectedAudienceReading": "the name is gone and the person still holds the gesture that removed it"
+        }
+      },
+      {
+        "shotId": "S4-room-withdraws",
+        "frameStart": 351,
+        "frameEnd": 431,
+        "semanticEvent": "the room itself gradually disappears",
+        "dramaticIntention": "the world withdraws, and it is the room rather than the person that goes",
+        "expectedAudienceReading": "the space around the person is going away",
+        "primaryAttention": "the room losing its structure",
+        "target": {
+          "id": "target",
+          "relations": []
+        },
+        "performance": {
+          "physical": "none",
+          "semantic": []
+        },
+        "compositionRelation": "expression-only",
+        "expression": {
+          "kind": "structural-decay",
+          "semantic": "the room must withdraw as SPACE rather than switch off"
+        },
+        "camera": {
+          "move": "push-in",
+          "motivation": "consequence-responsive",
+          "event": "ROOM_STRUCTURAL_DECAY",
+          "beginsAtFrame": 371,
+          "reason": "the camera follows the room consequence — corrected from the mislabelled action-responsive"
+        },
+        "startWorldState": {
+          "personState": "step:settle",
+          "nameState": "gone",
+          "roomState": "complete",
+          "nameProgress": 1,
+          "roomProgress": 0
+        },
+        "endWorldState": {
+          "personState": "step:settle",
+          "nameState": "gone",
+          "roomState": "withdrawing",
+          "nameProgress": 1,
+          "roomProgress": 0.8794
+        },
+        "continuityRequirements": [],
+        "decisionRecord": {
+          "semanticEvent": "the room itself gradually disappears",
+          "primaryPhysicalAction": "none",
+          "asciiExpression": "structural-decay",
+          "expressionReason": "the room must withdraw as SPACE rather than switch off",
+          "causalRelation": "expression-only",
+          "causalTimingLandmark": "none",
+          "cameraMotivation": "consequence-responsive",
+          "cameraMove": "push-in",
+          "attentionHierarchy": [
+            "the room losing its structure"
+          ],
+          "beginsIn": "room complete, NAME almost gone",
+          "endsIn": "room reduced to its structure",
+          "expectedAudienceReading": "the space around the person is going away"
+        }
+      },
+      {
+        "shotId": "S5-person-remains",
+        "frameStart": 432,
+        "frameEnd": 479,
+        "semanticEvent": "only the person remains",
+        "dramaticIntention": "the film end state",
+        "expectedAudienceReading": "everyone and everything else is gone, and the person is still standing there",
+        "primaryAttention": "the person, alone",
+        "target": {
+          "id": "the person, alone",
+          "relations": []
+        },
+        "performance": {
+          "physical": "none",
+          "semantic": []
+        },
+        "compositionRelation": "expression-only",
+        "expression": {
+          "kind": "structural-decay",
+          "semantic": "the decay completes rather than stops"
+        },
+        "camera": {
+          "move": "none",
+          "motivation": "static",
+          "reason": "the final image must be readable and held"
+        },
+        "startWorldState": {
+          "personState": "step:settle",
+          "nameState": "gone",
+          "roomState": "withdrawing",
+          "nameProgress": 1,
+          "roomProgress": 0.88
+        },
+        "endWorldState": {
+          "personState": "step:settle",
+          "nameState": "gone",
+          "roomState": "nearly-absent",
+          "nameProgress": 1,
+          "roomProgress": 0.9998
+        },
+        "continuityRequirements": [],
+        "decisionRecord": {
+          "semanticEvent": "only the person remains",
+          "primaryPhysicalAction": "none",
+          "asciiExpression": "structural-decay",
+          "expressionReason": "the decay completes rather than stops",
+          "causalRelation": "expression-only",
+          "causalTimingLandmark": "none",
+          "cameraMotivation": "static",
+          "cameraMove": "none",
+          "attentionHierarchy": [
+            "the person, alone"
+          ],
+          "beginsIn": "room reduced to its structure",
+          "endsIn": "name gone, room nearly absent, person standing alone",
+          "expectedAudienceReading": "everyone and everything else is gone, and the person is still standing there"
+        }
+      }
+    ],
+    "ledger": {
+      "cameraIntent": {
+        "compiled": true,
+        "consumed": true,
+        "consumer": "compileShotIntent"
+      },
+      "causalTiming": {
+        "compiled": false,
+        "consumed": true,
+        "consumer": "compileShotIntent"
+      },
+      "targetAnchor": {
+        "compiled": false,
+        "consumed": true,
+        "consumer": "compileShotIntent"
+      },
+      "asciiExpression": {
+        "compiled": false,
+        "consumed": true,
+        "consumer": "compileShotIntent"
+      }
+    }
+  },
+  "proposedS4Metadata": {
+    "move": "push-in",
+    "motivation": "consequence-responsive",
+    "respondsTo": {
+      "kind": "consequence",
+      "event": "ROOM_STRUCTURAL_DECAY",
+      "onsetsAt": 0.25
+    },
+    "beginsAt": 0.25,
+    "reason": "the camera follows the room consequence — corrected from the mislabelled action-responsive"
+  },
+  "compatibility": [
+    {
+      "quantity": "S4 camera onset frame",
+      "contract": 371,
+      "frozen": 372,
+      "agree": true,
+      "reason": "within one frame — a definition difference: beginsAt marks the frame the camera STARTS (easing value 0), the trace records the first MEASURABLE change"
+    },
+    {
+      "quantity": "S2 cause readable frame",
+      "contract": 157,
+      "frozen": 238,
+      "agree": false,
+      "reason": "the FILM applied the landmark to a PERFORMANCE WINDOW (7.0-9.4 s); the CONTRACT applies it to the SHOT SPAN. Same declared pair, two bases — the duplication this phase removes."
+    },
+    {
+      "quantity": "S2 effect onset frame",
+      "contract": 189,
+      "frozen": 246,
+      "agree": false,
+      "reason": "derived from the cause, so it differs for the same reason"
+    }
+  ],
+  "interpretation": "The causal landmarks disagree because the film derived them on a performance-window basis and the contract on the shot-span basis. Same declared pair, two independent derivations, seven sites in the repository. The contract establishes one owner."
+}

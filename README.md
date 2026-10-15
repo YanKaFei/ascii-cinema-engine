@@ -44,18 +44,52 @@
 
 <div align="center">
 
-<img src="docs/10-frame-060.png" alt="FRAME 060" width="100%">
+<img src="docs/10-frame-060.png" width="100%">
+<img src="docs/11-frame-291.png" width="100%">
+<img src="docs/15-frame-292.png" width="100%">
+<img src="docs/12-frame-320.png" width="100%">
+<img src="docs/13-frame-345.png" width="100%">
+<img src="docs/14-frame-470.png" width="100%">
+<img src="docs/16-timeline.png" width="100%">
 
-<img src="docs/11-frame-291.png" alt="FRAME 291" width="100%">
+</div>
 
-<img src="docs/15-frame-292.png" alt="FRAME 292" width="100%">
+---
 
-<img src="docs/12-frame-320.png" alt="FRAME 320" width="100%">
+## 运行 / RUN
 
-<img src="docs/13-frame-345.png" alt="FRAME 345" width="100%">
+```bash
+npm ci
+npm run typecheck && npm run build
 
-<img src="docs/14-frame-470.png" alt="FRAME 470" width="100%">
+npm test          # 518,975 不变式断言
+npm run gate:phase2   # 完整质量门：typecheck → build → test → 回归 → 基准 → 多样性
+```
 
-<img src="docs/16-timeline.png" alt="全片 480 帧时间签名" width="100%">
+完整管线：
 
+```bash
+node scripts/pipeline.mjs --prompt <主题> --out out/<name>
+```
+
+### 环境变量
+
+两个脚本需要**外部素材**，路径由环境变量提供，仓库内不含这些文件：
+
+| 变量 | 用途 |
+|---|---|
+| `CINEMA_TRACK` | `scripts/phase4a3*.mjs` / `phase4b0-*.mjs` 的音频轨路径 |
+| `CINEMA_PYTHON` | `scripts/phase4a3-independent.mjs` 用于独立比对的 Python 解释器 |
+
+未设置时会**明确报错**，不会静默使用错误路径。
+
+### 依赖的渲染工具链不在本仓库内
+
+`node_modules` 与 FFmpeg / Remotion 平台二进制**不随仓库分发**（见 `LICENSE.md`）。
+`out/draftt2/final-draftt2.mp4` 是已生成的成片，用于直接观看。
+
+---
+
+<div align="center">
+<sub>ENGINE · 96 TypeScript files / 30,458 lines · 240 × 120 character grid · byte-for-byte reproducible</sub>
 </div>

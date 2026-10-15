@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ASCII GPU renderer</title>
+<style>
+  html, body { margin: 0; background: #000; color: #9aa; font: 12px ui-monospace, monospace; }
+  #stage { position: fixed; inset: 0; }
+  canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+  #status { position: fixed; left: 8px; bottom: 8px; white-space: pre; pointer-events: none; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/node_modules/three/build/three.module.js",
+    "three/": "/node_modules/three/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="status">booting</div>
+<script type="module">
+import { GpuRenderer, diagnoseScene } from "/dist/src/render/gpu/GpuRenderer.js";
+
+import { decodeWire } from "/dist/src/render/gpu/bridge.js";
+
+const params = new URLSearchParams(location.search);
+const sceneUrl = params.get("scene");
+const outDir = params.get("dir") ?? "";
+const from = Number(params.get("from") ?? "0");
+const count = Number(params.get("count") ?? "1");
+const step = Number(params.get("step") ?? "1");
+const scale = Number(params.get("scale") ?? "1");
+
+const statusEl = document.getElementById("status");
+const canvas = document.getElementById("gl");
+const log = (m) => { statusEl.textContent = m; window.__status = m; };
+const fail = (m) => { statusEl.textContent = "ERROR: " + m; window.__error = String(m); };
+
+/**
+ * Build a column-major perspective * view matrix.
+ *
+ * The camera basis comes from the CPU reference (`makeBasis`) and is carried in the scene, so
+ * the two renderers cannot disagree about which way is right. Only the projection differs:
+ * WebGL's clip space is z in [-1,1], the CPU renderer uses the pinhole ratio directly.
+ */
+function makeViewProj(scene) {
+  const [px, py, pz] = scene.camera.position;
+  // The basis is CARRIED by the bridge (produced by the same `makeBasis` the CPU reference
+  // uses), never re-derived here. An earlier version recovered "forward" from the primitive
+  // centroid, which is a second source of truth for orientation and produced a black frame.
+  const [rx, ry, rz] = scene.camera.right;
+  const [ux, uy, uz] = scene.camera.up;
+  const [fx, fy, fz] = scene.camera.forward;
+
+  const aspect = scene.width / scene.height;
+  const fovY = scene.camera.fovY ?? Math.PI / 2;
+  // The CPU reference uses `focal = 1` as its pinhole ratio and `focusDistance` as the framing.
+  // WebGL's projection must produce the SAME image height for the same framing, so the vertical
+  // scale is f = 1 / tan(fovY/2) with fovY = 2*atan(1) => f = 1, matching the reference exactly.
+  const f = 1 / Math.tan(fovY / 2);
+  const near = scene.camera.near ?? 0.05;
+  const far = scene.camera.far ?? 200;
+
+  // view: rows are the basis, translation is -basis . position. Column-major for WebGL.
+  const view = new Float32Array([
+    rx, ux, -fx, 0,
+    ry, uy, -fy, 0,
+    rz, uz, -fz, 0,
+    -(rx * px + ry * py + rz * pz),
+    -(ux * px + uy * py + uz * pz),
+     (fx * px + fy * py + fz * pz),
+    1,
+  ]);
+  const nf = 1 / (near - far);
+  const proj = new Float32Array([
+    f / aspect, 0, 0, 0,
+    0, f, 0, 0,
+    0, 0, (far + near) * nf, -1,
+    0, 0, 2 * far * near * nf, 0,
+  ]);
+  // mvp = proj * view (column-major)
+  const out = new Float32Array(16);
+  for (let c = 0; c < 4; c++) {
+    for (let r = 0; r < 4; r++) {
+      let acc = 0;
+      for (let k = 0; k < 4; k++) acc += proj[k * 4 + r] * view[c * 4 + k];
+      out[c * 4 + r] = acc;
+    }
+  }
+  return out;
+}
+
+/** RGBA readback -> PNG, flipping Y and dropping alpha. */
+function rgbaToPng(rgba, w, h) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+  const img = ctx.createImageData(w, h);
+  for (let y = 0; y < h; y++) {
+    const src = (h - 1 - y) * w * 4;
+    const dst = y * w * 4;
+    for (let x = 0; x < w; x++) {
+      img.data[dst + x * 4 + 0] = rgba[src + x * 4 + 0];
+      img.data[dst + x * 4 + 1] = rgba[src + x * 4 + 1];
+      img.data[dst + x * 4 + 2] = rgba[src + x * 4 + 2];
+      img.data[dst + x * 4 + 3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  return new Promise((res) => c.toBlob((b) => res(b), "image/png"));
+}
+
+async function main() {
+  const gl = canvas.getContext("webgl2", {
+    antialias: false,
+    alpha: false,
+    depth: true,
+    premultipliedAlpha: false,
+    preserveDrawingBuffer: true,
+    powerPreference: "high-performance",
+  });
+  if (!gl) { fail("no webgl2 context"); return; }
+
+  const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+  window.__renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+
+  const renderer = new GpuRenderer(gl, { deterministic: true });
+  await renderer.loadAtlas("/public/gpu/ascii-atlas.png", "/public/gpu/ascii-atlas.json");
+
+  const wire = await (await fetch(sceneUrl)).json();
+  const scene = decodeWire(wire);
+  // honour a scale override without touching the bridge's numbers
+  if (scale !== 1) {
+    for (let i = 0; i < scene.data.length; i += 9) scene.data[i + 6] *= scale;
+  }
+  canvas.width = scene.width;
+  canvas.height = scene.height;
+  const mvp = makeViewProj(scene);
+
+  // A minimal geometry check: if a frame is black, these numbers say whether the primitives were
+  // ever in front of the camera. Deeper diagnosis is available via `window.__diagnose()`.
+  let inFront = 0;
+  {
+    const [px, py, pz] = scene.camera.position;
+    const [fx, fy, fz] = scene.camera.forward;
+    for (let v = 0; v < scene.count; v++) {
+      const i = v * 9;
+      if ((scene.data[i] - px) * fx + (scene.data[i + 1] - py) * fy + (scene.data[i + 2] - pz) * fz > 0.001) inFront++;
+    }
+  }
+  window.__geom = JSON.stringify({ inFront, cols: scene.cols, rows: scene.rows });
+
+  const results = [];
+  for (let k = 0; k < count; k++) {
+    const fi = from + k * step;
+    const rgba = renderer.renderFrame(scene, mvp, fi);
+
+    // peaks are recorded by the renderer immediately after each pass writes its target
+    window.__peaks = JSON.stringify(renderer.passPeaks);
+    const finalPx = (() => { let n = 0; for (let i = 0; i < rgba.length; i += 4) if (rgba[i] > 2) n++; return n; })();
+    if (k === 0) log(`PASSES final=${finalPx} ${window.__peaks}`);
+    const blob = await rgbaToPng(rgba, scene.width, scene.height);
+    const name = `f${String(fi).padStart(5, "0")}.png`;
+    const res = await fetch(`/frame?name=${name}&dir=${encodeURIComponent(outDir)}`, { method: "POST", body: blob });
+    if (!res.ok) { fail("upload failed " + name); return; }
+    // count non-black pixels so "it rendered" is a fact, not an assumption
+    let nonBlack = 0;
+    for (let i = 0; i < rgba.length; i += 4) if (rgba[i] > 8 || rgba[i + 1] > 8 || rgba[i + 2] > 8) nonBlack++;
+    window.__nonBlack = nonBlack;
+    results.push({ frame: fi, name, passes: renderer.passNames, bytes: blob.size, nonBlack });
+      log(`rendered ${k + 1}/${count} frame ${fi} nonBlack=${nonBlack} (${blob.size}B)`);
+  }
+
+  window.__result = JSON.stringify({
+    ok: true,
+    renderer: window.__renderer,
+    floatTargets: renderer.floatTargets,
+    width: scene.width,
+    height: scene.height,
+    cols: scene.cols,
+    rows: scene.rows,
+    primitives: scene.count,
+    inFront: JSON.parse(window.__geom).inFront,
+    nonBlack: window.__nonBlack,
+    passes: renderer.passNames,
+    frames: results,
+  });
+  log(
+    `DONE peaks=${window.__peaks} ` +
+      `float=${renderer.floatTargets} prims=${scene.count} geom=${window.__geom}`
+  );
+}
+
+main().catch((e) => fail(e && e.stack ? e.stack : String(e)));
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{
+  "phase": "3.3J",
+  "purpose": "every location where a production path could author camera, causal timing, world state or target geometry outside the Director compilation path",
+  "policy": {
+    "PRODUCTION": "must compile through the contract; the two existing production films are FROZEN and are recorded as known, justified bypasses",
+    "LEGACY": "frozen media; not migrated",
+    "TEST": "scoped experiment; may remain",
+    "ENGINE": "mechanism, not a directing decision"
+  },
+  "summary": {
+    "LEGACY": 2,
+    "TEST": 5,
+    "ENGINE": 2,
+    "PRODUCTION": 1
+  },
+  "entries": [
+    {
+      "file": "scripts/phase33i-film.mjs",
+      "classification": "LEGACY",
+      "purpose": "Micro Film V2 \u2014 the production film of record",
+      "bypasses": {
+        "camera_authored_directly": true,
+        "causal_timing_reconstructed": true,
+        "world_state_reconstructed": true
+      },
+      "action_taken": "none \u2014 SUPERSEDED by scripts/phase33k-proof.mjs for new production work; the film is FROZEN",
+      "remaining_justification": "FROZEN ARTEFACT: V2 hash fb8c4175d2bdba32 must not change. New production films compile through the contract (see scripts/phase33k-proof.mjs)."
+    },
+    {
+      "file": "scripts/phase33g-render.mjs",
+      "classification": "LEGACY",
+      "purpose": "Micro Film V1 render path; V1 is frozen and its hash must not change",
+      "bypasses": {
+        "camera_authored_directly": true,
+        "causal_timing_reconstructed": true,
+        "world_state_reconstructed": true
+      },
+      "action_taken": "none \u2014 FROZEN: any edit changes a frozen media hash",
+      "remaining_justification": "FROZEN ARTEFACT: V1 hash ab39d78a40e74ba7 must not change. New production films compile through the contract."
+    },
+    {
+      "file": "scripts/phase33e-shot.mjs",
+      "classification": "TEST",
+      "purpose": "the 3.3E camera-motivation experiment",
+      "bypasses": {
+        "camera_authored_directly": true,
+        "causal_timing_reconstructed": true,
+        "world_state_reconstructed": true
+      },
+      "action_taken": "none \u2014 TEST/DEBUG scoped; may remain per \u00a77",
+      "remaining_justification": "isolated experiment; does not render a production film"
+    },
+    {
+      "file": "scripts/phase33d-causal.mjs",
+      "classification": "TEST",
+      "purpose": "the 3.3D causal composition experiment",
+      "bypasses": {
+        "camera_authored_directly": false,
+        "causal_timing_reconstructed": false,
+        "world_state_reconstructed": true
+      },
+      "action_taken": "none \u2014 TEST/DEBUG scoped; may remain per \u00a77",
+      "remaining_justification": "isolated experiment; does not render a production film"
+    },
+    {
+      "file": "scripts/phase33h4-v2.mjs",
+      "classification": "TEST",
+      "purpose": "the 3.3H.4 blocking experiment",
+      "bypasses": {
+        "camera_authored_directly": false,
+        "causal_timing_reconstructed": false,
+        "world_state_reconstructed": false
+      },
+      "action_taken": "none \u2014 TEST/DEBUG scoped; may remain per \u00a77",
+      "remaining_justification": "isolated experiment; does not render a production film"
+    },
+    {
+      "file": "scripts/phase33b-push.mjs",
+      "classification": "TEST",
+      "purpose": "the 3.3B camera stress test",
+      "bypasses": {
+        "camera_authored_directly": false,
+        "causal_timing_reconstructed": false,
+        "world_state_reconstructed": false
+      },
+      "action_taken": "none \u2014 TEST/DEBUG scoped; may remain per \u00a77",
+      "remaining_justification": "isolated experiment; does not render a production film"
+    },
+    {
+      "file": "scripts/phase33c-lab.mjs",
+      "classification": "TEST",
+      "purpose": "the 3.3C motion lab",
+      "bypasses": {
+        "camera_authored_directly": false,
+        "causal_timing_reconstructed": false,
+        "world_state_reconstructed": false
+      },
+      "action_taken": "none \u2014 TEST/DEBUG scoped; may remain per \u00a77",
+      "remaining_justification": "isolated experiment; does not render a production film"
+    },
+    {
+      "file": "src/camera/rig.ts",
+      "classification": "ENGINE",
+      "purpose": "camera rig primitives",
+      "bypasses": {
+        "camera_authored_directly": false,
+        "causal_timing_reconstructed": false,
+        "world_state_reconstructed": false
+      },
+      "action_taken": "none \u2014 primitives, not a film path; CameraIntent validation now sits above it",
+      "remaining_justification": "a rig is a mechanism, not a directing decision"
+    },
+    {
+      "file": "src/semantic/shot-compiler.ts",
+      "classification": "ENGINE",
+      "purpose": "THE CONTRACT \u2014 compile, validate, guard",
+      "bypasses": {
+        "camera_authored_directly": false,
+        "causal_timing_reconstructed": false,
+        "world_state_reconstructed": false
+      },
+      "action_taken": "CREATED this phase",
+      "remaining_justification": "n/a \u2014 this is the enforcement"
+    },
+    {
+      "file": "scripts/phase33k-proof.mjs",
+      "classification": "PRODUCTION",
+      "purpose": "the FIRST contract-driven production film (3.3K)",
+      "bypasses": {
+        "camera_authored_directly": true,
+        "causal_timing_reconstructed": true,
+        "world_state_reconstructed": true
+      },
+      "action_taken": "COMPLIES \u2014 consumes CompiledShotSpec via compiledSpecOfFrame + guardRenderable",
+      "remaining_justification": "none required",
+      "note": "the renderer declares the PLAN and its timing DOMAINS; it decides no executable value. `camZFor` is a low-level interpolation that CONSUMES spec.camera.beginsAtFrame. The effect gate CONSUMES spec.causalTiming.effectOnsetFrame. GUARD CAUGHT THE BYPASS ON FIRST EXECUTION: the first version indexed planned shots, and guardRenderable refused it with \"production renders must consume a compiled, validated plan\"."
+    }
+  ],
+  "second_pass": {
+    "phase": "3.3K",
+    "new_production_film": "scripts/phase33k-proof.mjs",
+    "unexplained_new_production_bypass": 0,
+    "frozen_legacy_bypasses": [
+      "scripts/phase33g-render.mjs (V1)",
+      "scripts/phase33i-film.mjs (V2)"
+    ],
+    "policy": "frozen legacy paths are recorded as KNOWN, JUSTIFIED bypasses and are NOT counted as new-production compliance"
+  }
+}

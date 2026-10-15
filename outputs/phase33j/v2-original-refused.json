@@ -1,0 +1,7 @@
+{
+  "note": "the ORIGINAL V2 plan as authored does not compile under the new contract — this is the contract working",
+  "refusal": "shot 'S1-establish' has non-integer frame bounds",
+  "context": {
+    "shot": "S1-establish"
+  }
+}

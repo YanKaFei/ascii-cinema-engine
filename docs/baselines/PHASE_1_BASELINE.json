@@ -1,0 +1,83 @@
+{
+  "baselineId": "phase-1-loneliness-v0.1.0",
+  "label": "PHASE 1 BASELINE — ASCII Cinema Engine v0.1",
+  "frozenAt": "2026-10-04T15:00:00+08:00",
+  "note": "Frozen immediately after Phase 1 was accepted. Phase 2 must not silently break any value here. See docs/baselines/PHASE_1_BASELINE.md for what may and may not change.",
+  "versionControl": {
+    "git": false,
+    "commit": null,
+    "reason": "This project directory is not a git repository (verified with `git rev-parse --is-inside-work-tree`). No commit hash exists to record. The baseline is therefore pinned by content hashes plus a source fingerprint.",
+    "sourceFingerprint": "b530d4bb86f5de608224492d5615d7ca3fe9728892806b783546a8626acb0cde",
+    "sourceFingerprintMethod": "sha256 of the newline-joined `sha256sum` output of every *.ts/*.tsx/*.mjs file under src/, remotion/ and scripts/, sorted by path"
+  },
+  "input": {
+    "prompt": "孤独",
+    "mode": "word",
+    "cli": "node scripts/pipeline.mjs --prompt 孤独 --out out/loneliness --seconds 20 --fps 30 --width 1920 --height 1080 --quality draft --aspect 16:9"
+  },
+  "spec": {
+    "version": "1.0.0",
+    "slug": "loneliness",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationInSeconds": 20,
+    "totalFrames": 600,
+    "glyphGrid": { "cols": 240, "rows": 120, "cellW": 8, "cellH": 9 },
+    "seed": 3912112200,
+    "shotCount": 5,
+    "shots": [
+      { "id": "01", "title": "DOT / VOID", "start": 0, "duration": 4, "camera": "static", "techniques": ["point-source", "negative-space", "single-glyph"] },
+      { "id": "02", "title": "ARRIVAL FROM THE EDGES", "start": 4, "duration": 4, "camera": "static", "techniques": ["assemble", "edge-entry", "glyph-density-transformation", "particle-field"] },
+      { "id": "03", "title": "THE FIGURE", "start": 8, "duration": 4, "camera": "lateral-right", "techniques": ["lateral-camera-move", "depth-parallax", "assemble", "human-form", "glyph-density-transformation"] },
+      { "id": "04", "title": "PUSH / DENSITY", "start": 12, "duration": 4, "camera": "push-in", "techniques": ["push-in", "glyph-density-transformation", "depth-parallax", "particle-field"] },
+      { "id": "05", "title": "DISSOLUTION / ONE GLYPH", "start": 16, "duration": 4, "camera": "push-in", "techniques": ["dissolve", "scatter", "particle-field", "single-glyph", "depth-parallax"] }
+    ]
+  },
+  "hashes": {
+    "sha256": {
+      "rough-cut.mp4": "64d173eb02a1c1fb7bbd5ab6649c529776f00229f7522428b785a21a797e2937",
+      "remotion-rough-cut.mp4": "1f6f904a56ce18cb1b6540100dcec8a53177e49535a5c2abeffdf52c0276b194",
+      "grid.bin": "49b4c86bcbc5677f5d02eb1012087aa4301615aca289b8d02c58a7cb974757e8",
+      "film-spec.json": "626a6c73243e58b34a529d89023cddb1d375c9a43cae362879fc05db9b93b029",
+      "shot-list.json": "1ca0d13c687cf0da8b54f5a982e565f0bc8bc729c0961d1c92f8d03004f8ede2",
+      "contact-sheet.png": "a334daab0987181d9dffba48b4cbe281d131f5af674c0efa84bcbdd6d1a3a729"
+    },
+    "bytes": {
+      "rough-cut.mp4": 3151323,
+      "remotion-rough-cut.mp4": 2790294,
+      "grid.bin": 34560564,
+      "film-spec.json": 15659,
+      "shot-list.json": 13816,
+      "contact-sheet.png": 46675
+    },
+    "enforceByteIdentity": {
+      "grid.bin": true,
+      "film-spec.json": true,
+      "shot-list.json": true,
+      "rough-cut.mp4": false,
+      "remotion-rough-cut.mp4": false,
+      "contact-sheet.png": true
+    },
+    "enforceByteIdentityRationale": "grid.bin, film-spec.json, shot-list.json and contact-sheet.png are produced entirely by deterministic engine code, so byte identity is a meaningful invariant and is enforced. The two MP4s depend on the libx264 build shipped inside @remotion/compositor-darwin-arm64; a toolchain upgrade could legitimately change the bitstream without changing a single frame. Their byte hashes are recorded for change detection but the enforced gates are structural (frame count, duration, fps, resolution, codec, full decode) — see the decode requirements below."
+  },
+  "tests": {
+    "command": "npm test",
+    "file": "dist/src/cli/tests.js",
+    "assertions": 518965,
+    "failures": 0
+  },
+  "decodeRequirements": {
+    "frames": 600,
+    "durationSeconds": 20.0,
+    "width": 1920,
+    "height": 1080,
+    "fps": "30/1",
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "corruptFrames": 0,
+    "decodedFramesMustEqual": 600
+  },
+  "renderer": "CPU_REFERENCE_RENDERER (see docs/ARCHITECTURE.md)",
+  "seam": "grid.bin (ACGR v1)"
+}
