@@ -1,3 +1,7 @@
+<h1 align="center">ASCII Cinema Engine</h1>
+
+<p align="center" data-ecosystem-nav="1"><sub><a href="https://github.com/YanKaFei/Costume-Director-Vault-Starter">Costume</a> · <a href="https://github.com/YanKaFei/art-aesthetic-vault">Art</a> · <a href="https://github.com/YanKaFei/ascii-cinema-engine">ASCII Cinema</a> · <a href="https://github.com/YanKaFei/ascii-h3-director">ASCII H3</a> · <a href="https://github.com/YanKaFei/2d-limited-mv-studio">2D MV</a> · <a href="https://github.com/YanKaFei/virtual-heroine-atlas">Virtual Heroine</a></sub></p>
+
 <div align="center">
 
 <img src="docs/01-title.png" alt="字符电影引擎 — ASCII CINEMA ENGINE" width="100%">
@@ -93,3 +97,13 @@ node scripts/pipeline.mjs --prompt <主题> --out out/<name>
 <div align="center">
 <sub>ENGINE · 96 TypeScript files / 30,458 lines · 240 × 120 character grid · byte-for-byte reproducible</sub>
 </div>
+
+
+## DSH ecosystem
+
+- [Costume](https://github.com/YanKaFei/Costume-Director-Vault-Starter) — 服装视觉知识库
+- [Art](https://github.com/YanKaFei/art-aesthetic-vault) — 艺术风格库
+- [ASCII Cinema](https://github.com/YanKaFei/ascii-cinema-engine) — ASCII 电影引擎
+- [ASCII H3](https://github.com/YanKaFei/ascii-h3-director) — ASCII / 动态字体导演
+- [2D MV](https://github.com/YanKaFei/2d-limited-mv-studio) — 2D 动画 MV 工坊
+- [Virtual Heroine](https://github.com/YanKaFei/virtual-heroine-atlas) — 虚拟女主角图鉴
